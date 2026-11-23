@@ -83,6 +83,7 @@ public class InMemoryClientServerFactory
     {
         McpSyncClient client = McpClient.sync( clientTransport )
                 .clientInfo( info )
+                .requestTimeout( McpClientTimeouts.toolCallTimeout() )
                 .jsonSchemaValidator( new JacksonJsonSchemaValidatorSupplier().get() )
                 .build();
         return client;

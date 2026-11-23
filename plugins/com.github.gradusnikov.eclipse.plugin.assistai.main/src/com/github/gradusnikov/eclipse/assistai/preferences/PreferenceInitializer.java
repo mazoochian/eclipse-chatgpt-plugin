@@ -65,6 +65,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer
         // produce a new token on every Eclipse restart since defaults are not persisted.
         initializeAuthToken( store );
 
+        // Chat tool call timeout
+        store.setDefault(PreferenceConstants.ASSISTAI_TOOL_CALL_TIMEOUT_SECONDS, PreferenceConstants.ASSISTAI_TOOL_CALL_TIMEOUT_SECONDS_DEFAULT);
+
         // Initialize Code Completion defaults
         store.setDefault(PreferenceConstants.ASSISTAI_COMPLETION_ENABLED, true);
         store.setDefault(PreferenceConstants.ASSISTAI_COMPLETION_MODEL, ""); // Empty means use chat model

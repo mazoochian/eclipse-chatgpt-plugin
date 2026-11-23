@@ -22,6 +22,10 @@ public class PreferenceConstants
     public static final String ASSISTAI_MCP_HTTP_ENABLED = "AssistAIMcpHttpEnabled";
     public static final String ASSISTAI_MCP_HTTP_TOOL_PREFIX = "AssistAIMcpHttpToolPrefix";
     
+    // Chat tool calls: how long the chat waits for one MCP tool call to return.
+    public static final String ASSISTAI_TOOL_CALL_TIMEOUT_SECONDS = "AssistAIToolCallTimeoutSeconds";
+    public static final int ASSISTAI_TOOL_CALL_TIMEOUT_SECONDS_DEFAULT = 300;
+
     // Code Completion preferences
     public static final String ASSISTAI_COMPLETION_ENABLED = "AssistAICompletionEnabled";
     public static final String ASSISTAI_COMPLETION_MODEL = "AssistAICompletionModel";

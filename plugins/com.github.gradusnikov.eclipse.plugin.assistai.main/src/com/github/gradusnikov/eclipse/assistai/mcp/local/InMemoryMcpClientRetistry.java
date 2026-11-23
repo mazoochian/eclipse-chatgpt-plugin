@@ -176,6 +176,7 @@ public class InMemoryMcpClientRetistry
             
             McpClientTransport mcpTransport = new StdioClientTransport(stdioParameters, jsonMapperSupplier.get() );
             McpSyncClient client = McpClient.sync(mcpTransport)
+                    .requestTimeout( McpClientTimeouts.toolCallTimeout() )
                     .jsonSchemaValidator( new JacksonJsonSchemaValidatorSupplier().get() )
                     .build();
             addClient(userMcp.name(), client);

@@ -21,6 +21,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.github.gradusnikov.eclipse.assistai.Activator;
+import com.github.gradusnikov.eclipse.assistai.mcp.local.InMemoryMcpClientRetistry;
+import com.github.gradusnikov.eclipse.assistai.mcp.local.McpClientTimeouts;
 import com.github.gradusnikov.eclipse.assistai.models.ModelApiDescriptorRepository;
 import com.github.gradusnikov.eclipse.assistai.preferences.PreferenceConstants;
 
@@ -86,6 +88,17 @@ public class ModelPreferencePage extends FieldEditorPreferencePage implements IW
             chatComposite
         );
         addField( modelSelector );
+
+        IntegerFieldEditor toolCallTimeout = new IntegerFieldEditor(
+            PreferenceConstants.ASSISTAI_TOOL_CALL_TIMEOUT_SECONDS,
+            "&Tool call timeout (seconds):",
+            chatComposite
+        );
+        toolCallTimeout.setValidRange( McpClientTimeouts.MIN_SECONDS, McpClientTimeouts.MAX_SECONDS );
+        toolCallTimeout.getLabelControl( chatComposite ).setToolTipText(
+            "How long the chat waits for one tool call (a test run, a build) before giving up. "
+            + "Long running tools hand back an operation id after about a minute and keep working." );
+        addField( toolCallTimeout );
         
         // --- Code Completion Section ---
         Group completionGroup = createGroup(parent, "Code Completion");
@@ -196,6 +209,22 @@ public class ModelPreferencePage extends FieldEditorPreferencePage implements IW
         group.layout(true, true);
     }
     
+    /**
+     * The chat's MCP clients read the tool call timeout when they are built, so a new
+     * value only takes effect once they are rebuilt.
+     */
+    @Override
+    public boolean performOk()
+    {
+        int before = getPreferenceStore().getInt( PreferenceConstants.ASSISTAI_TOOL_CALL_TIMEOUT_SECONDS );
+        boolean ok = super.performOk();
+        if ( ok && before != getPreferenceStore().getInt( PreferenceConstants.ASSISTAI_TOOL_CALL_TIMEOUT_SECONDS ) )
+        {
+            Activator.getDefault().make( InMemoryMcpClientRetistry.class ).restart();
+        }
+        return ok;
+    }
+
     @Override
     public void dispose()
     {
